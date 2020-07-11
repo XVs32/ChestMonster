@@ -17,7 +17,7 @@ public class KeyboardEventHandler {
 
     public static KeyBinding keyBindings;
 
-    private static boolean keyflag = false;
+    public static short keystate = 0;
 
     // declare an array of key bindings
     public static void init() throws Exception {
@@ -34,13 +34,14 @@ public class KeyboardEventHandler {
     public static void onClientTick(TickEvent.ClientTickEvent event){
         if(event.phase == TickEvent.Phase.END ){ //not sure what this does
 
-            if(binds.get("R").isKeyDown() && keyflag == false){
+            if(binds.get("R").isKeyDown() && keystate == 0){
                 System.out.println("R is down");
-                keyflag = true;
+
+                keystate = 1;
             }
-            else if(binds.get("R").isKeyDown() == false && keyflag == true){
+            else if(binds.get("R").isKeyDown() == false && keystate == 2){
                 System.out.println("R is up");
-                keyflag = false;
+                keystate = 0;
             }
 
         }
