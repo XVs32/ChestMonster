@@ -19,10 +19,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.locks.ReentrantLock;
 
 import static com.google.common.primitives.Ints.max;
@@ -45,7 +42,7 @@ public class InventoryGrappler {
 
             mutex.lock();
 
-            printChest(event);
+            //printChest(event);
 
             switch (event.player.openContainer.getInventory().size()){
                 case 46:
@@ -53,9 +50,9 @@ public class InventoryGrappler {
                     System.out.println("Inventory");
 
                     for(int i=9;i<36;i++){
-                        int j=9;
+
                         if( !event.player.inventory.mainInventory.get(i).isEmpty() && event.player.inventory.mainInventory.get(i).isStackable() ){
-                            for(;j<i;j++){
+                            for(int j=36-1;j>i;j--){
                                 if( isSameItemInPlayerTickEvent(event,i,j) ){
                                     inventoryItemTransfer(event, i, j, 64);
                                 }
@@ -63,7 +60,7 @@ public class InventoryGrappler {
                         }
                     }
 
-                    event.player.inventory.mainInventory.subList(9,36).sort(new inventoryComparator());
+                    event.player.inventory.mainInventory.subList(9,36).sort(new ItemStackComparator());
                     System.out.println("Inventory finish");
                     break;
                 case 63:
@@ -110,40 +107,31 @@ public class InventoryGrappler {
 
                     int slotsCount = h.getSlots();
 
-                    //todo: read slots into a List<itemstack>
+                    List<ItemStack> itemList = new ArrayList<>();
 
-                    //todo: sort and stack the List<itemstack>
+                    for(int i=0;i<slotsCount;i++){
+                        itemList.add(h.getStackInSlot(i).copy());
+                    }
 
-                    //todo: write back the List<itemstack>
-
-                   /* for(int i=0;i<slotsCount;i++){
-                        ;
-                        if( !h.getStackInSlot(i).isEmpty() && h.getStackInSlot(i).isStackable() ){
-                            for(int j = slotsCount;j>i;j--){
+                    for(int i=0;i<slotsCount;i++){
+                        if( !itemList.get(i).isEmpty() && itemList.get(i).isStackable() ){
+                            for(int j = slotsCount - 1;j>i;j--){
                                 if( isSameItemInWorldTickEvent(h,i,j) ){
-                                    inventoryItemTransfer(event, i, j, 64);
+                                    chestItemTransfer(itemList, i, j, 64);
                                 }
                             }
                         }
                     }
 
-                    h..subList(9,36).sort(new inventoryComparator());
+                    itemList.sort(new ItemStackComparator());
 
-                    System.out.println(slotsCount);
-
-                    for(int i=0;i< slotsCount;i++){
-                        System.out.println(h.getStackInSlot(i).getDisplayName());
+                    for(int i=0;i<slotsCount;i++){
+                        h.extractItem(i,64,false);
+                        h.insertItem(i, itemList.get(i).copy() , false);
                     }
-
-                    h.insertItem(5, new ItemStack(Items.IRON_INGOT) , false);*/
 
                 });
 
-                //itemHandler.ifPresent(h -> h.insertItem(5, new ItemStack(Items.IRON_INGOT) , false));
-                //itemHandler.ifPresent(h -> System.out.println(h.getStackInSlot(5).getDisplayName()));
-
-                //itemHandler.insertItem(0,event.player.inventory.mainInventory.get(0),false);
-                //System.out.println(itemHandler.getStackInSlot(0).getDisplayName());
             }
         }
     }
@@ -157,40 +145,38 @@ public class InventoryGrappler {
 
 
     private static boolean isSameItemInPlayerTickEvent(TickEvent.PlayerTickEvent event, int o1, int o2){
-        return event.player.inventory.mainInventory.get(o1).getTranslationKey().
-                equals(event.player.inventory.mainInventory.get(o2).getTranslationKey());
+        return isSameItem(event.player.inventory.mainInventory.get(o1), event.player.inventory.mainInventory.get(o2));
     }
 
     private static boolean isSameItemInWorldTickEvent(IItemHandler h, int o1, int o2){
-        return h.getStackInSlot(o1).getTranslationKey().
-                equals(h.getStackInSlot(o2).getTranslationKey());
+        return isSameItem(h.getStackInSlot(o1), h.getStackInSlot(o2));
     }
+
+    private static boolean isSameItem(ItemStack o1, ItemStack o2){
+        return o1.getTranslationKey().equals(o2.getTranslationKey());
+    }
+
+
 
     private static void inventoryItemTransfer(TickEvent.PlayerTickEvent event, int o1, int o2, int amount){
-        amount = Math.min(amount , event.player.inventory.mainInventory.get(o1).getMaxStackSize()
-                - event.player.inventory.mainInventory.get(o1).getCount());
-
-        amount = Math.min(amount , event.player.inventory.mainInventory.get(o2).getCount());
-
-        event.player.inventory.mainInventory.get(o1)
-                .setCount(event.player.inventory.mainInventory.get(o1).getCount() + amount);
-
-        event.player.inventory.mainInventory.get(o2)
-                .setCount(event.player.inventory.mainInventory.get(o2).getCount() - amount);
+        itemStacker(event.player.inventory.mainInventory.get(o1), event.player.inventory.mainInventory.get(o2),amount);
     }
 
-    private static void chestItemTransfer(TickEvent.PlayerTickEvent event, int o1, int o2, int amount){
-        amount = Math.min(amount , event.player.inventory.mainInventory.get(o1).getMaxStackSize()
-                - event.player.inventory.mainInventory.get(o1).getCount());
-
-        amount = Math.min(amount , event.player.inventory.mainInventory.get(o2).getCount());
-
-        event.player.inventory.mainInventory.get(o1)
-                .setCount(event.player.inventory.mainInventory.get(o1).getCount() + amount);
-
-        event.player.inventory.mainInventory.get(o2)
-                .setCount(event.player.inventory.mainInventory.get(o2).getCount() - amount);
+    private static void chestItemTransfer(List<ItemStack> itemList, int o1, int o2, int amount){
+        itemStacker(itemList.get(o1), itemList.get(o2),amount);
     }
+
+    private static void itemStacker(ItemStack destination, ItemStack source, int amount){
+
+        amount = Math.min(amount , destination.getMaxStackSize() - destination.getCount());
+        amount = Math.min(amount , source.getCount());
+
+        destination.setCount(destination.getCount() + amount);
+        source.setCount(source.getCount() - amount);
+
+    }
+
+
 
     private static void printChest(TickEvent.PlayerTickEvent event){
 
@@ -207,37 +193,7 @@ public class InventoryGrappler {
     }
 
 
-    static class containerComparator implements Comparator {
-
-        @Override
-        public int compare(Object o1, Object o2) {
-            String[] name1 = ((Slot) o1).getStack().getTranslationKey().split("_|\\.");
-            String[] name2 = ((Slot) o2).getStack().getTranslationKey().split("_|\\.");
-
-            int i = name1.length - 1;
-            int j = name2.length - 1;
-
-            while (true) {
-                int result = name1[i].compareTo(name2[j]);
-                if (result == 0) {
-                    if (i == 0 && j == 0) {
-                        return 0;
-                    } else if (i == 0) {
-                        return -1;
-                    } else if (j == 0) {
-                        return 1;
-                    } else {
-                        i--;
-                        j--;
-                    }
-                } else {
-                    return -result;
-                }
-            }
-        }
-    }
-
-    static class inventoryComparator implements Comparator {
+    static class ItemStackComparator implements Comparator {
 
         @Override
         public int compare(Object o1, Object o2) {
