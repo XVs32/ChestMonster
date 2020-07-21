@@ -11,20 +11,21 @@ modId="cm" #mandatory
 
 version="1.16.1-1.0.0" #mandatory
 
-displayName="Tutorial Mod" #mandatory
+displayName="Chest Monster" #mandatory
 
 updateJSONURL="http://myurl.me/" #optional
 
-displayURL="http://github.com/XVs32/" #optional
+displayURL="https://github.com/XVs32/ChestMonster" #optional
 
 logoFile="examplemod.png" #optional
 
-credits="Thanks for RTES" #optional
+credits="Thanks for Inventory Tweaks, the original idea of this mod." #optional
 
 authors="XVs32" #optional
 
 description='''
-Whatever, this is just a description.
+This mod could sort your chest or inventory by pressing one single key, the idea comes from a famous mod "Inventory Tweaks", which unfortunately is unmaintained at the moment.
+Note that this mod is still in progress and currently have way less functions than the original "Inventory Tweaks". I might or might not update this mod due to the time I have, and the fact that I'm a C programmer and this my first ever JAVA project.
 '''
 
 

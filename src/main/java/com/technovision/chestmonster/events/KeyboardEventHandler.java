@@ -26,53 +26,29 @@ public class KeyboardEventHandler {
     // declare an array of key bindings
     public static void init() throws Exception {
         // instantiate the key bindings
-        /*keyBindings = new KeyBinding("R", 82 , "key.magicbeans.category");
+        keyBindings = new KeyBinding("Sort", 82 , "Chest Monster");
         ClientRegistry.registerKeyBinding(keyBindings);
 
         KEYBIND_ARRAY = KeyBinding.class.getDeclaredField("KEYBIND_ARRAY");
         KEYBIND_ARRAY.setAccessible(true);
-        binds = (Map<String, KeyBinding>) KEYBIND_ARRAY.get(null);*/
+        binds = (Map<String, KeyBinding>) KEYBIND_ARRAY.get(null);
     }
 
     @SubscribeEvent (priority = EventPriority.NORMAL)
     public static void onClientTick(InputEvent.KeyInputEvent event){
 
-        /*System.out.println(event.getKey());
-        System.out.println(event.getAction());
-        System.out.println(event.getScanCode());*/
 
-        if(event.getKey() != 82){
+        if(event.getKey() != binds.get("Sort").getKey().getKeyCode()){
             return;
         }
 
         if(event.getAction() == 1 && sorting){
-            System.out.println("R is down");
+            System.out.println("Sort is down");
             sorting = false;
         }
-        /*else if(event.getAction() == 0 ){
-            System.out.println("R is up");
-            keystate = 0;
-        }*/
 
 
     }
-
-    /*@SubscribeEvent (priority = EventPriority.NORMAL)
-    public static void openGUI(GuiScreenEvent.KeyboardKeyEvent event){
-
-        System.out.println(event.getKeyCode());
-        System.out.println(keyBindings.isKeyDown());
-        System.out.println(keystate);
-        if(keyBindings.isKeyDown() && keystate == 0){
-            System.out.println("GUI R is down");
-
-            keystate = 5;
-        }
-        else if(keyBindings.isKeyDown() == false && keystate == 2){
-            System.out.println("GUI R is up");
-            keystate = 0;
-        }
-    }*/
 
 
 }
