@@ -1,7 +1,6 @@
 package com.chestmonster.chestmonster.events;
 
 import com.chestmonster.chestmonster.channel.SortInventoryMsg;
-import com.chestmonster.chestmonster.item.ItemHandler;
 import com.chestmonster.chestmonster.channel.ChannelSetup;
 import com.chestmonster.chestmonster.channel.SortChestMsg;
 import net.minecraftforge.event.TickEvent;
@@ -20,7 +19,7 @@ public class InventoryGrappler {
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event){
 
-        if(sorting == false){
+        if(!sorting){
             sorting = true;
 
             mutex.lock();
