@@ -8,14 +8,21 @@ import net.minecraftforge.fml.network.simple.SimpleChannel;
 public class ChannelSetup {
     private static final String PROTOCOL_VERSION = "1";
     public static final SimpleChannel ChestPos = NetworkRegistry.newSimpleChannel(
-            new ResourceLocation(ChestMonster.MOD_ID, "chestpos"),
+            new ResourceLocation(ChestMonster.MOD_ID, "chest_pos"),
             () -> PROTOCOL_VERSION,
             PROTOCOL_VERSION::equals,
             PROTOCOL_VERSION::equals
     );
 
-    public static final SimpleChannel SortKey = NetworkRegistry.newSimpleChannel(
-            new ResourceLocation(ChestMonster.MOD_ID, "sortkeypress"),
+    public static final SimpleChannel SortChest = NetworkRegistry.newSimpleChannel(
+            new ResourceLocation(ChestMonster.MOD_ID, "sort_chest"),
+            () -> PROTOCOL_VERSION,
+            PROTOCOL_VERSION::equals,
+            PROTOCOL_VERSION::equals
+    );
+
+    public static final SimpleChannel SortInventory = NetworkRegistry.newSimpleChannel(
+            new ResourceLocation(ChestMonster.MOD_ID, "sort_inventory"),
             () -> PROTOCOL_VERSION,
             PROTOCOL_VERSION::equals,
             PROTOCOL_VERSION::equals
@@ -32,12 +39,19 @@ public class ChannelSetup {
                 LastChestPos::decode,
                 LastChestPos::handle);
 
-        SortKey.registerMessage(
+        SortChest.registerMessage(
                 id++,
-                SortKeyPress.class,
-                SortKeyPress::encode,
-                SortKeyPress::decode,
-                SortKeyPress::handle);
+                SortChestMsg.class,
+                SortChestMsg::encode,
+                SortChestMsg::decode,
+                SortChestMsg::handle);
+
+        SortInventory.registerMessage(
+                id++,
+                SortInventoryMsg.class,
+                SortInventoryMsg::encode,
+                SortInventoryMsg::decode,
+                SortInventoryMsg::handle);
 
     }
 

@@ -1,8 +1,9 @@
 package com.chestmonster.chestmonster.events;
 
+import com.chestmonster.chestmonster.channel.SortInventoryMsg;
 import com.chestmonster.chestmonster.item.ItemHandler;
 import com.chestmonster.chestmonster.channel.ChannelSetup;
-import com.chestmonster.chestmonster.channel.SortKeyPress;
+import com.chestmonster.chestmonster.channel.SortChestMsg;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -31,19 +32,17 @@ public class InventoryGrappler {
                 case 47:
                     System.out.println("Inventory");
 
-                    ItemHandler.stack(event.player.inventory.mainInventory.subList(9,36));
-                    ItemHandler.sort(event.player.inventory.mainInventory.subList(9,36));
+                    ChannelSetup.SortInventory.sendToServer(new SortInventoryMsg());
 
-                    System.out.println("Inventory finish");
                     break;
                 case 63:
                     System.out.println("small chest");
-                    ChannelSetup.SortKey.sendToServer(new SortKeyPress());
+                    ChannelSetup.SortChest.sendToServer(new SortChestMsg());
 
                     break;
                 case 90:
                     System.out.println("big chest");
-                    ChannelSetup.SortKey.sendToServer(new SortKeyPress());
+                    ChannelSetup.SortChest.sendToServer(new SortChestMsg());
 
                     break;
                 default:

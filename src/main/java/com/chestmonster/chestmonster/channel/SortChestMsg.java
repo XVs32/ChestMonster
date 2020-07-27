@@ -7,17 +7,17 @@ import java.util.function.Supplier;
 
 import static com.chestmonster.chestmonster.events.ChestSorter.chestFlag;
 
-public class SortKeyPress {
+public class SortChestMsg {
 
-    public SortKeyPress() {}
+    public SortChestMsg() {}
 
-    public static void encode(SortKeyPress msg, PacketBuffer buf) {}
+    public static void encode(SortChestMsg msg, PacketBuffer buf) {}
 
-    public static SortKeyPress decode(PacketBuffer buf) {
-        return new SortKeyPress();
+    public static SortChestMsg decode(PacketBuffer buf) {
+        return new SortChestMsg();
     }
 
-    public static void handle(SortKeyPress msg, Supplier<NetworkEvent.Context> ctx) {
+    public static void handle(SortChestMsg msg, Supplier<NetworkEvent.Context> ctx) {
 
         ctx.get().enqueueWork(() -> {
 
