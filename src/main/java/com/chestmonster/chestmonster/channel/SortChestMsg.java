@@ -22,7 +22,6 @@ public class SortChestMsg {
         ctx.get().enqueueWork(() -> {
 
             chestFlag = true;
-            System.out.println("sort key press");
 
         });
         ctx.get().setPacketHandled(true);

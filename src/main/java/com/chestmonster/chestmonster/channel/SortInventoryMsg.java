@@ -16,15 +16,14 @@ public class SortInventoryMsg {
     public static void encode(SortInventoryMsg msg, PacketBuffer buf) {}
 
     public static SortInventoryMsg decode(PacketBuffer buf) {
-        return null;
+        return new SortInventoryMsg();
     }
 
     public static void handle(SortInventoryMsg msg, Supplier<NetworkEvent.Context> ctx) {
 
         ctx.get().enqueueWork(() -> {
-            ItemHandler.stack(Objects.requireNonNull(ctx.get().getSender()).inventory.mainInventory.subList(9,36));
-            ItemHandler.sort(Objects.requireNonNull(ctx.get().getSender()).inventory.mainInventory.subList(9,36));
-            System.out.println("sort key press");
+            ItemHandler.stack(ctx.get().getSender().inventory.mainInventory.subList(9,36));
+            ItemHandler.sort(ctx.get().getSender().inventory.mainInventory.subList(9,36));
         });
         ctx.get().setPacketHandled(true);
     }
