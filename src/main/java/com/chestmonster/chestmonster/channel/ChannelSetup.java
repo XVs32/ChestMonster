@@ -7,12 +7,6 @@ import net.minecraftforge.fml.network.simple.SimpleChannel;
 
 public class ChannelSetup {
     private static final String PROTOCOL_VERSION = "1";
-    public static final SimpleChannel ChestPos = NetworkRegistry.newSimpleChannel(
-            new ResourceLocation(ChestMonster.MOD_ID, "chest_pos"),
-            () -> PROTOCOL_VERSION,
-            PROTOCOL_VERSION::equals,
-            PROTOCOL_VERSION::equals
-    );
 
     public static final SimpleChannel SortChest = NetworkRegistry.newSimpleChannel(
             new ResourceLocation(ChestMonster.MOD_ID, "sort_chest"),
@@ -31,13 +25,6 @@ public class ChannelSetup {
     private static int id = 0;
 
     public static void register(){
-
-        ChestPos.registerMessage(
-                id++,
-                LastChestPos.class,
-                LastChestPos::encode,
-                LastChestPos::decode,
-                LastChestPos::handle);
 
         SortChest.registerMessage(
                 id++,

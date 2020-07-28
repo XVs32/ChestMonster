@@ -11,27 +11,25 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public class ChestSorter {
 
     public static boolean chestFlag = false;
-    public static BlockPos lastInteractPosition;
+    public static Queue<BlockPos> lastInteractPosition = new LinkedList<>();
 
     @SubscribeEvent
     public static void onWorldTick(TickEvent.WorldTickEvent event){
 
-
-        if(chestFlag == true){
-            chestFlag = false;
-            BlockPos po = lastInteractPosition;
+        if(!lastInteractPosition.isEmpty()){
+            BlockPos po = lastInteractPosition.poll();
             TileEntity chestContainer = event.world.getTileEntity(po);
-            System.out.println("getTileEntity");
+
             if(chestContainer != null){
-                System.out.println("not null");
 
                 LazyOptional<IItemHandler> itemHandler = chestContainer.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
-
                 itemHandler.ifPresent( h -> {
 
                     int slotsCount = h.getSlots();
